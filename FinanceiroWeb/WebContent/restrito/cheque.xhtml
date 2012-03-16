@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/templates/interna.xhtml">
+	<ui:define name="titulo">
+    	#{msg.cheque_titulo}
+	</ui:define>
+
+	<ui:define name="corpo">
+
+		<h:form id="idiomas">
+			<ui:repeat value="${contextoBean.idiomas}" var="idioma">
+				<h:commandLink action="#{contextoBean.setIdiomaUsuario(idioma)}">
+					<h:graphicImage library="imagens" name="bandeira_#{idioma}.png"
+						title="#{msg['idioma_'.concat(idioma)]}" />
+				</h:commandLink>
+			</ui:repeat>
+		</h:form>
+
+		<h:messages id="mensagem" />
+
+		<h:form id="edicao" prependId="false">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{msg.cheque_numero_inicial}"
+					for="chequeInicial" />
+				<h:inputText id="chequeInicial" value="#{chequeBean.chequeInicial}"
+					maxlength="6" size="6" />
+				<h:outputLabel value="#{msg.cheque_numero_final}" for="chequeFinal" />
+				<h:inputText id="chequeFinal" value="#{chequeBean.chequeFinal}"
+					maxlength="6" size="6" />
+				<h:commandButton value="#{msg.cheque_botao_salvar}"
+					action="#{chequeBean.salvar}">
+					<f:ajax execute="@form" render=":listagem  :edicao" />
+				</h:commandButton>
+			</h:panelGrid>
+		</h:form>
+
+		<h:form id="listagem" prependId="false">
+			<h:dataTable value="#{chequeBean.lista}" var="cheque"
+				rendered="#{!empty chequeBean.lista}">
+				<h:column>
+					<f:facet name="header">#{msg.cheque_coluna_cheque}</f:facet>
+					<h:outputText value="#{cheque.chequeId.cheque}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">#{msg.cheque_coluna_data}</f:facet>
+					<h:outputText value="#{cheque.dataCadastro}">
+						<f:convertDateTime dateStyle="medium" />
+					</h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">#{msg.cheque_coluna_lancamento}</f:facet>
+					<h:outputText value="#{cheque.lancamento.descricao}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">#{msg.cheque_coluna_valor}</f:facet>
+					<h:outputText value="#{cheque.lancamento.valor}">
+						<f:convertNumber minFractionDigits="2" />
+					</h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">#{msg.cheque_coluna_data_baixa}</f:facet>
+					<h:outputText value="#{cheque.lancamento.data}">
+						<f:convertDateTime dateStyle="medium" />
+					</h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">	#{msg.cheque_coluna_situacao}</f:facet>
+					<h:outputText
+						value="#{msg['cheque_coluna_situacao_'.concat(cheque.situacao)]}" />
+						
+				</h:column>
+				<h:column>
+					<h:commandLink action="#{chequeBean.cancelar}">
+						<f:ajax execute="@form" render=":listagem :mensagem" />
+						<h:graphicImage library="imagens" name="cancelar16.png"
+							title="#{msg.cheque_coluna_cancelar}" />
+						<f:setPropertyActionListener target="#{chequeBean.selecionado}"
+							value="#{cheque}" />
+					</h:commandLink>
+				</h:column>
+				<h:column>
+					<h:commandLink action="#{chequeBean.excluir}">
+						<f:ajax execute="@form" render=":listagem :mensagem" />
+						<h:graphicImage library="imagens" name="excluir16.png"
+							title="#{msg.cheque_coluna_excluir}" />
+						<f:setPropertyActionListener target="#{chequeBean.selecionado}"
+							value="#{cheque}" />
+					</h:commandLink>
+				</h:column>
+			</h:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

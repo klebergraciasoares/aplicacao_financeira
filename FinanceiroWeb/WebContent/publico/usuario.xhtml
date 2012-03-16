@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<ui:composition template="/templates/interna.xhtml">
+	<ui:define name="titulo">
+			Cadastro de Usuários
+		</ui:define>
+	<ui:define name="corpo">
+		<hr />
+		<h:form id="cadastro">
+			<h:messages />
+
+			<h:inputHidden value="#{usuarioBean.usuario.codigo}" />
+			<h:inputHidden value="#{usuarioBean.usuario.ativo}" />
+			<h:inputHidden value="#{usuarioBean.destinoSalvar}" />
+			<fieldset>
+				<legend>Dados Pessoais</legend>
+				<h:panelGrid columns="2">
+
+					<h:outputLabel value="Nome: " for="nome" />
+					<h:inputText value="#{usuarioBean.usuario.nome}" id="nome"
+						label="nome" size="30" maxlength="30" required="true"
+						requiredMessage="Você não tem nome?">
+						<f:validateLength minimum="10" maximum="30" />
+					</h:inputText>
+
+					<h:outputLabel value="Data Nascimento: " for="data" />
+					<h:inputText value="#{usuarioBean.usuario.nascimento}" id="data"
+						label="Data Nascimento" size="10" maxlength="10" required="true">
+						<f:convertDateTime dateStyle="medium" />
+					</h:inputText>
+
+					<h:outputLabel value="Celular: " for="celular" />
+
+					<h:inputText value="#{usuarioBean.usuario.celular}" id="celular"
+						label="Celular" size="10" />
+
+					<h:outputLabel value="e-Mail: " for="email" />
+					<h:panelGroup>
+						<h:inputText value="#{usuarioBean.usuario.email}" label="e-Mail"
+							id="email" size="50" maxlength="50" required="true"
+							validatorMessage="e-mail inválido">
+							<f:validateRegex
+								pattern="[a-zA-Z0-9-\-\_\.]+@[a-zA-Z0-9-\-\_\.]+" />
+						</h:inputText>
+						<h:message for="email" />
+
+					</h:panelGroup>
+
+
+
+					<h:outputLabel value="Idioma: " for="idioma" />
+					<h:selectOneMenu value="#{usuarioBean.usuario.idioma}" id="idioma"
+						label="Idioma">
+						<f:selectItem itemValue="pt_BR" itemLabel="Português" />
+						<f:selectItem itemValue="en_US" itemLabel="English" />
+						<f:selectItem itemValue="es_ES" itemLabel="Espanol" />
+					</h:selectOneMenu>
+
+				</h:panelGrid>
+			</fieldset>
+
+			<br />
+
+			<fieldset>
+
+				<legend>Usuário e Senha</legend>
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Login: " for="login" />
+					<h:inputText value="#{usuarioBean.usuario.login}" id="login"
+						label="Login" size="5" maxlength="50" required="true"
+						validatorMessage="Login deve ter no mínino 15 e no máximo 50 caracteres e só pode ter o símbolos '.' e '_'">
+						<f:validateRegex pattern="([a-z]|[0-9]|[.]|[_]){5,50}" />
+					</h:inputText>
+
+					<h:outputLabel value="Senha: " for="senha" />
+					<h:inputSecret value="#{usuarioBean.usuario.senha}" size="10"
+						maxlength="10" required="true" redisplay="true" label="senha"
+						id="senha" />
+
+					<h:outputLabel value="Confirma Senha: " for="confirmaSenha" />
+					<h:inputSecret value="#{usuarioBean.confirmarSenha}" size="10"
+						maxlength="10" required="true" redisplay="true"
+						label="Confirma Senha" id="confirmaSenha" />
+				</h:panelGrid>
+			</fieldset>
+
+			<br />
+			
+			<h:panelGroup rendered="#{empty contextoBean.usuarioLogado}">
+				<fieldset>
+					<legend>Conta Inicial</legend>
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Descrição: " for="descricao" />
+						<h:inputText id="descricao" label="Descrição"
+							value="#{usuarioBean.conta.descricao}" required="true"
+							maxlength="45" />
+
+						<h:outputLabel value="Saldo Inicial: " for="saldoInicial" />
+						<h:inputText id="saldoInicial"
+							value="#{usuarioBean.conta.saldoInicial}" size="10">
+							<f:convertNumber minFractionDigits="2" />
+						</h:inputText>
+					</h:panelGrid>
+				</fieldset>
+
+			</h:panelGroup>
+
+			<h:commandButton value="Salvar" action="#{usuarioBean.salvar}" />
+
+		</h:form>
+		<hr />
+	</ui:define>
+</ui:composition>
+</html>

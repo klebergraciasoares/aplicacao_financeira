@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/interna.xhtml">
+
+	<ui:define name="titulo">
+			Categorias
+		</ui:define>
+
+	<ui:define name="corpo">
+		<h:panelGrid columns="2" cellpadding="5">
+			<h:panelGroup>
+				<h:form>
+					<p:commandButton value="Novo" action="#{categoriaBean.novo}" update=":edicao"/>
+				</h:form>
+				<br />
+				<h:form id="arvore">
+					<p:tree value="#{categoriaBean.categoriasTree}" var="node" 
+					 	dynamic="false"
+						selectionMode="single"
+						nodeSelectListener="#{categoriaBean.selecionar}"
+						update=":edicao" 
+						expandAnim="FADE_IN" collapseAnim="FADE_OUT">
+						<p:treeNode>
+							<h:outputText value="#{node.descricao}"/>
+							
+						</p:treeNode>
+					</p:tree>
+				</h:form>
+			</h:panelGroup>
+
+			<h:panelGroup id="edicao">
+				<h:messages />
+				<h:form rendered="#{categoriaBean.mostraEdicao}">
+					<h:inputHidden value="#{categoriaBean.editada.codigo}" />
+					<h:inputHidden value="#{categoriaBean.editada.fator}" />
+					
+					<h:outputLabel value="Codigo #{categoriaBean.editada.codigo}" />
+
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Pai" />
+						<h:selectOneMenu value="#{categoriaBean.editada.pai}">
+							
+							<f:selectItems value="#{categoriaBean.categoriasSelect}" />
+						</h:selectOneMenu>
+						<h:outputLabel value="Descrição" />
+						<h:inputText value="#{categoriaBean.editada.descricao}" />
+						<h:outputText />
+						<h:panelGroup>
+							<p:commandButton value="Salvar" action="#{categoriaBean.salvar}" update=":edicao, :arvore"/>
+							<p:commandButton value="Excluir" action="#{categoriaBean.excluir}" update=":edicao, :arvore"/>
+						</h:panelGroup>
+						<h:outputText />
+						<p:commandButton value="Nova sub-categoria" action="#{categoriaBean.novo}" update=":edicao"/>
+					</h:panelGrid>
+				</h:form>
+			</h:panelGroup>
+		</h:panelGrid>
+	</ui:define>
+
+</ui:composition>
+
+</html>

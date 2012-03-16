@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags">
+
+<ui:composition>
+	<sec:ifAnyGranted roles="ROLE_USUARIO">
+		<h:form id="menu">
+			<table width="100%">
+				<tr>
+					<td>
+						<h:commandButton action="/restrito/conta" value="Contas" />
+						<h:commandButton action="/restrito/categoria" value="Categorias" />
+						<h:commandButton action="/restrito/lancamento" value="Lançamentos" />
+						<h:commandButton action="/restrito/cheque" value="Cheque" />
+						<h:commandButton action="/restrito/acao" value="Ação" />
+						<h:selectOneMenu value="#{contextoBean.contaAtiva.conta}"
+							valueChangeListener="#{contextoBean.setContaAtiva}"
+							rendered="#{!empty contextoBean}" onchange="submit()">
+							<f:selectItems value="#{contaBean.lista}" var="conta"
+								itemValue="#{conta.conta}" itemLabel="#{conta.descricao}" />
+						</h:selectOneMenu>
+						
+						</td>
+
+					<td align="left" ><sec:ifAnyGranted roles="ROLE_ADMINISTRADOR">
+							<h:commandLink action="/admin/principal" title="Administrativo">
+								<h:graphicImage library="imagens" name="administrativo16.png" />
+							</h:commandLink>
+						</sec:ifAnyGranted> <h:commandLink action="/restrito/principal" title="Principal">
+							<h:graphicImage library="imagens" name="principal16.png" />
+						</h:commandLink> <h:outputLink value="javascript:void(0)"
+							onclick="document.location='#{request.contextPath}/j_spring_security_logout'"
+							title="Sair">
+							<h:graphicImage library="imagens" name="logout16.png" />
+						</h:outputLink></td>
+				</tr>
+			</table>
+		</h:form>
+	</sec:ifAnyGranted>
+</ui:composition>
+</html>

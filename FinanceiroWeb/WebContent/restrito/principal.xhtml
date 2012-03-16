@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util">
+
+<ui:composition template="/templates/principal.xhtml">
+	<ui:define name="titulo">
+			Gerenciador Financeiro Pessoal
+		</ui:define>
+
+	<ui:define name="corpo">
+		Usuário logado #{request.remoteUser}
+		<br />	
+		Nome do Usuário Logado: #{contextoBean.usuarioLogado.nome}
+		<br />
+		<h:panelGrid columns="2" cellpadding="5" width="auto">
+
+			<h:panelGroup >
+				<fieldset style="height:auto;width:300px;">
+					<legend>Lançamentos até hoje</legend>
+					<util:extrato width="300px" height="100px"
+						lista="#{lancamentoBean.listaAteHoje}" larguraDescricao="130"
+						botaoExclusao="false" botaoEdicao="false" colunaSaldo="false" />
+				</fieldset>
+			</h:panelGroup>
+			<h:panelGroup>
+				<fieldset style="height:auto;width:300px;  " >
+					<legend>Lançamentos futuros</legend>
+					<util:extrato width="300px" height="100px"
+						lista="#{lancamentoBean.listaFuturos}" larguraDescricao="130"
+						botaoExclusao="false" botaoEdicao="false" colunaSaldo="false" />
+				</fieldset>
+			</h:panelGroup>
+		</h:panelGrid>
+
+	</ui:define>
+</ui:composition>
+</html>

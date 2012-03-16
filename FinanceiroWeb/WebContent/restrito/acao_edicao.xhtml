@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	<h:panelGrid style="margin:0px auto;">
+		<h:form id="edicao" >
+			<h:messages />
+			<h:inputHidden value="#{acaoBean.selecionada.acao.codigo}" />
+			<h:panelGrid columns="10">
+				<h:outputLabel value="Sigla" for="sigla" />
+				<h:inputText id="sigla" value="#{acaoBean.selecionada.acao.sigla}"
+					required="true" maxlength="10" size="10" />
+				<h:outputLabel value="Descrição" for="descricao" />
+				<h:inputText id="descricao"
+					value="#{acaoBean.selecionada.acao.descricao}" maxlength="30"
+					size="10" />
+				<h:outputLabel value="Qt. de Quotas" for="quantidade" />
+				<h:inputText id="quantidade"
+					value="#{acaoBean.selecionada.acao.quantidade}" required="true"
+					size="6">
+				</h:inputText>
+				<h:outputLabel value="Origem" for="origem" />
+				<h:selectOneMenu id="origem"
+					value="#{acaoBean.selecionada.acao.origem}">
+					<f:selectItem itemValue="B" itemLabel="Bovespa" />
+					<f:selectItem itemValue="M" itemLabel="Mundo" />
+				</h:selectOneMenu>
+				<p:commandButton value="Salvar" onclick="confirmation.show()" />
+				<p:confirmDialog  message="Deseja salvar os dados?"
+					header="Pergunta" severity="info" widgetVar="confirmation">
+					<p:commandButton value="Sim"
+						update=":edicao, :listagem, :graficoCarteira"
+						oncomplete="confirmation.hide()"
+						actionListener="#{acaoBean.salvar}" />
+					<p:commandButton value="Não" onclick="confirmation.hide()"
+						type="button" />
+				</p:confirmDialog>
+
+			</h:panelGrid>
+		</h:form>
+	</h:panelGrid>
+</ui:composition>
+</html>

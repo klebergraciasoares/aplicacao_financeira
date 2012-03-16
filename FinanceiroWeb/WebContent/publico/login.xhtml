@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+	<ui:composition template="/templates/principal.xhtml">
+		<ui:define name="corpo">
+			<h:form>
+			<h:commandButton value="Registre-se" action="#{usuarioBean.novo()}" />
+		</h:form>
+	
+		<h:panelGroup rendered="#{!empty param.login_error}">
+			<span style="font-color:red"> Erro ao efetuar o login.</span><br />
+			<br/>
+			Motivo: #{SPRING_SECURITY_LAST_EXCEPTION.message}
+		</h:panelGroup>
+	
+		<form id="login" method="post" action="${request.contextPath}/j_spring_security_check">
+			<table>
+				<tr>
+					<td>Login</td>
+					<td><input type='text' name='j_username' /></td>
+				</tr>
+				<tr>
+					<td>Senha</td>
+					<td><input type='password' name='j_password' /></td>
+				</tr>
+				<tr>
+					<td align="right"><input type="checkbox"
+						name="_spring_security_remember_me" /></td>
+					<td>Entrar automaticamente</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td><input type="submit" value="Entrar" /></td>
+				</tr>
+			</table>
+			<script>
+				document.getElementById("login").j_username.value = "#{SPRING_SECURITY_LAST_USERNAME}";
+			</script>
+		</form>
+		</ui:define>
+	</ui:composition>
+</html>

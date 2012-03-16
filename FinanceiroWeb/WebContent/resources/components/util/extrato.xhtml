@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="width" required="true" />
+	<composite:attribute name="height" required="true" />
+	<composite:attribute name="lista" type="java.util.List" required="true" />
+	<composite:attribute name="saldos" type="java.util.List" />
+	<composite:attribute name="larguraDescricao" type="int" required="true" />
+	<composite:attribute name="botaoExclusao" type="java.lang.Boolean"
+		default="true" />
+	<composite:attribute name="botaoEdicao" type="java.lang.Boolean"
+		default="true" />
+	<composite:attribute name="colunaSaldo" type="java.lang.Boolean"
+		default="true" />
+</composite:interface>
+
+<!-- IMPLEMENTAÇÃO -->
+<composite:implementation>
+	<p:dataTable style="height:\#{cc.attrs.height}; width: #{cc.attrs.width}" scrollable="true"
+		value="#{cc.attrs.lista}" var="lancamento" rowIndexVar="index" >
+		<p:column width="15" rendered="#{cc.attrs.botaoEdicao}" >
+			<p:commandLink action="#{lancamentoBean.editar}" update=":edicao">
+				<h:graphicImage library="imagens" name="editar16.png" />
+				<f:setPropertyActionListener target="#{lancamentoBean.editado}"
+					value="#{lancamento}" />
+			</p:commandLink>
+		</p:column>
+		<p:column width="15" rendered="#{cc.attrs.botaoExclusao}">
+			<p:commandLink action="#{lancamentoBean.excluir}" update=":listagem"
+				onclick="if (!confirm('Confirma a exclusão do lançamento #{lancamento.descricao}?')) return false;">
+				<h:graphicImage library="imagens" name="excluir16.png" />
+				<f:setPropertyActionListener target="#{lancamentoBean.editado}"
+					value="#{lancamento}" />
+			</p:commandLink>
+		</p:column>
+		<p:column width="70">
+			<f:facet name="header">Data</f:facet>
+			<h:outputText value="#{lancamento.data}">
+				<f:convertDateTime dateStyle="medium" />
+			</h:outputText>
+		</p:column>
+		<p:column width="#{cc.attrs.larguraDescricao}">
+			<f:facet name="header">Descrição</f:facet>
+			<h:outputText value="#{lancamento.descricao}" />
+		</p:column>
+		<p:column width="60">
+			<f:facet name="header">Valor</f:facet>
+			<h:outputText
+				style="color: #{lancamento.categoria.fator gt 0 ? 'green' : 'red' }; text-align:right; display:block;"
+				value="#{lancamento.valor}">
+				<f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+			</h:outputText>
+		</p:column>
+		<p:column width="60" rendered="#{cc.attrs.colunaSaldo}">
+			<f:facet name="header">Saldo</f:facet>
+			<h:outputText
+				style="color: #{cc.attrs.saldos[index] gt 0 ? 'green' : 'red' }; text-align:right; display:block;"
+				value="#{cc.attrs.saldos[index]}">
+				<f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+				
+			</h:outputText>
+			
+		</p:column>
+	</p:dataTable>
+</composite:implementation>
+
+</html>
