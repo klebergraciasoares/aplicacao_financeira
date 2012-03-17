@@ -27,18 +27,11 @@ public class LancamentoRN {
 		return this.lancamentoDAO.carregar(lancamento);
 	}
 
-	public float saldo(Conta conta, Date data) throws RNException {
+	public float saldo(Conta conta, Date data)  {
 
-		boolean anterior = conta.getDataCadastro().before(data);
-		if (!anterior) {
-			float saldoInicial = conta.getSaldoInicial();
-			float saldoNaData = this.lancamentoDAO.saldo(conta, data);
-			return saldoInicial + saldoNaData;
-		} else {
-			throw new RNException(
-					"A data solicitada é anterior à criação da Conta.");
-
-		}
+		float saldoInicial = conta.getSaldoInicial();
+		float saldoNaData = this.lancamentoDAO.saldo(conta, data);
+		return saldoInicial + saldoNaData;
 
 	}
 

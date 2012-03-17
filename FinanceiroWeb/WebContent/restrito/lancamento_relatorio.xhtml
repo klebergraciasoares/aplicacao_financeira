@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition>
+		<h:form id="relatorio">
+			<h:panelGroup>
+				<fieldset>
+					<legend>Parâmetros do Relatório</legend>
+				
+					<h:panelGrid columns="7" >
+					
+						<h:outputLabel value="Data inicial: " />
+						<p:calendar value="#{lancamentoBean.dataInicialRelatorio}" pattern="dd/MM/yyyy" />
+						<h:outputLabel value="Data final: " />
+						<p:calendar value="#{lancamentoBean.dataFinalRelatorio}" pattern="dd/MM/yyyy" />
+						<p:commandButton value="Imprimir" ajax="false" >
+							<p:fileDownload value="#{lancamentoBean.arquivoRetorno}"/>
+						</p:commandButton>
+					</h:panelGrid>
+				</fieldset>
+			</h:panelGroup>
+		</h:form>
+	</ui:composition>
+</html>

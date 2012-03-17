@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -11,6 +12,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+
+import org.primefaces.model.StreamedContent;
 
 import financeiro.categoria.Categoria;
 import financeiro.cheque.Cheque;
@@ -21,6 +24,8 @@ import financeiro.lancamento.Lancamento;
 import financeiro.lancamento.LancamentoRN;
 import financeiro.util.ContextoUtil;
 import financeiro.util.RNException;
+import financeiro.util.UtilException;
+import financeiro.web.util.RelatorioUtil;
 
 @ManagedBean(name = "lancamentoBean")
 @ViewScoped
@@ -39,6 +44,10 @@ public class LancamentoBean {
 	private List<Lancamento> listaFuturos;
 
 	private Integer numeroCheque;
+
+	private Date dataInicialRelatorio;
+	private Date dataFinalRelatorio;
+	private StreamedContent arquivoRetorno;
 
 	public LancamentoBean() {
 		this.novo();
@@ -106,41 +115,33 @@ public class LancamentoBean {
 	public List<Lancamento> getLista() {
 
 		if (this.lista == null) {
-			FacesContext contextFaces = FacesContext.getCurrentInstance();
-			try {
-				ContextoBean contextoBean = ContextoUtil.getContextoBean();
-				Conta conta = contextoBean.getContaAtiva();
+			ContextoBean contextoBean = ContextoUtil.getContextoBean();
+			Conta conta = contextoBean.getContaAtiva();
 
-				Calendar dataSaldo = new GregorianCalendar();
-				dataSaldo.add(Calendar.MONTH, -1);
-				dataSaldo.add(Calendar.DAY_OF_MONTH, -1);
+			Calendar dataSaldo = new GregorianCalendar();
+			dataSaldo.add(Calendar.MONTH, -1);
+			dataSaldo.add(Calendar.DAY_OF_MONTH, -1);
 
-				Calendar inicio = new GregorianCalendar();
-				inicio.add(Calendar.MONTH, -1);
+			Calendar inicio = new GregorianCalendar();
+			inicio.add(Calendar.MONTH, -1);
 
-				LancamentoRN lancamentoRN = new LancamentoRN();
+			LancamentoRN lancamentoRN = new LancamentoRN();
+ 
+			this.saldoGeral = lancamentoRN.saldo(conta, dataSaldo.getTime());
 
-				this.saldoGeral = lancamentoRN
-						.saldo(conta, dataSaldo.getTime());
-				this.lista = lancamentoRN.listar(conta, inicio.getTime(), null);
+			this.lista = lancamentoRN.listar(conta, inicio.getTime(), null);
 
-				Categoria categoria = null;
-				double saldo = this.saldoGeral;
-				for (Lancamento lancamento : this.lista) {
-					categoria = lancamento.getCategoria();
-					saldo = saldo
-							+ (lancamento.getValor().floatValue() * categoria
-									.getFator());
-					this.saldos.add(saldo);
-				}
-			} catch (RNException e) {
-				contextFaces.addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_ERROR,
-						"A data solicitada é anterior à criação da Conta", ""));
-				e.printStackTrace();
+			Categoria categoria = null;
+			double saldo = this.saldoGeral;
+			for (Lancamento lancamento : this.lista) {
+				categoria = lancamento.getCategoria();
+				saldo = saldo
+						+ (lancamento.getValor().floatValue() * categoria
+								.getFator());
+				this.saldos.add(saldo);
 			}
-
 		}
+		
 		return this.lista;
 	}
 
@@ -190,9 +191,66 @@ public class LancamentoBean {
 		}
 	}
 
+	public StreamedContent getArquivoRetorno() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		ContextoBean contextoBean = ContextoUtil.getContextoBean();
+		String usuario = contextoBean.getUsuarioLogado().getLogin();
+		String nomeRelatorioJasper = "extrato";
+		String nomeRelatorioSaida = usuario + "_extrato";
+		LancamentoRN lancamentoRN = new LancamentoRN();
+		GregorianCalendar calendario = new GregorianCalendar();
+		calendario.setTime(this.getDataInicialRelatorio());
+		calendario.add(Calendar.DAY_OF_MONTH, -1);// subtrai um dia da data
+													// informada
+		Date dataSaldo = new Date(calendario.getTimeInMillis());
+		RelatorioUtil relatorioUtil = new RelatorioUtil();
+		HashMap<String, Object> parametroRelatorio = new HashMap<String, Object>();
+		parametroRelatorio.put("codigoUsuario", contextoBean.getUsuarioLogado()
+				.getCodigo());
+		parametroRelatorio.put("numeroConta", contextoBean.getContaAtiva()
+				.getConta());
+		parametroRelatorio.put("dataInicial", this.getDataInicialRelatorio());
+		parametroRelatorio.put("dataFinal", this.getDataFinalRelatorio());
+		try {
+			parametroRelatorio
+					.put("saldoAnterior", lancamentoRN.saldo(
+							contextoBean.getContaAtiva(), dataSaldo));
+
+			this.arquivoRetorno = relatorioUtil.geraRelatorio(
+					parametroRelatorio, nomeRelatorioJasper,
+					nomeRelatorioSaida, RelatorioUtil.RELATORIO_PDF);
+		
+		} catch (UtilException e) {
+			context.addMessage(null, new FacesMessage(e.getMessage()));
+		}
+
+		return arquivoRetorno;
+	}
+
 	//
+
+	public Date getDataInicialRelatorio() {
+		return dataInicialRelatorio;
+	}
+
 	public void setLista(List<Lancamento> lista) {
 		this.lista = lista;
+	}
+
+	public void setDataInicialRelatorio(Date dataInicialRelatorio) {
+		this.dataInicialRelatorio = dataInicialRelatorio;
+	}
+
+	public Date getDataFinalRelatorio() {
+		return dataFinalRelatorio;
+	}
+
+	public void setDataFinalRelatorio(Date dataFinalRelatorio) {
+		this.dataFinalRelatorio = dataFinalRelatorio;
+	}
+
+	public void setArquivoRetorno(StreamedContent arquivoRetorno) {
+		this.arquivoRetorno = arquivoRetorno;
 	}
 
 	public List<Double> getSaldos() {
