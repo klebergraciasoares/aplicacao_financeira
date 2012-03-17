@@ -15,20 +15,19 @@
 	<ui:define name="corpo">
 		<h:panelGrid columns="2" cellpadding="5">
 			<h:panelGroup>
-				<h:form>
+				<h:form prependId="false">
 					<p:commandButton value="Novo" action="#{categoriaBean.novo}" update=":edicao"/>
 				</h:form>
 				<br />
-				<h:form id="arvore">
+				<h:form id="arvore" prependId="false" >
 					<p:tree value="#{categoriaBean.categoriasTree}" var="node" 
-					 	dynamic="false"
+					 	cache="true"
 						selectionMode="single"
-						nodeSelectListener="#{categoriaBean.selecionar}"
-						update=":edicao" 
+						dynamic="false"
 						expandAnim="FADE_IN" collapseAnim="FADE_OUT">
+						<p:ajax event="select" update=":edicao" listener="#{categoriaBean.selecionar}" />
 						<p:treeNode>
 							<h:outputText value="#{node.descricao}"/>
-							
 						</p:treeNode>
 					</p:tree>
 				</h:form>
@@ -36,16 +35,13 @@
 
 			<h:panelGroup id="edicao">
 				<h:messages />
-				<h:form rendered="#{categoriaBean.mostraEdicao}">
+				<h:form rendered="#{categoriaBean.mostraEdicao}" prependId="false">
 					<h:inputHidden value="#{categoriaBean.editada.codigo}" />
 					<h:inputHidden value="#{categoriaBean.editada.fator}" />
-					
-					<h:outputLabel value="Codigo #{categoriaBean.editada.codigo}" />
 
 					<h:panelGrid columns="2">
 						<h:outputLabel value="Pai" />
 						<h:selectOneMenu value="#{categoriaBean.editada.pai}">
-							
 							<f:selectItems value="#{categoriaBean.categoriasSelect}" />
 						</h:selectOneMenu>
 						<h:outputLabel value="Descrição" />

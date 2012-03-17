@@ -15,15 +15,11 @@
 	<ui:define name="corpo">
 
 		<h:form id="edicao">
-			<!-- aqui entrará o formulário de cadastro de contas -->
-
+			<!-- (1) -->
 			<h:messages />
-
 			<h:inputHidden value="#{contaBean.selecionada.conta}" />
 			<h:inputHidden value="#{contaBean.selecionada.favorita}" />
-
 			<h:panelGrid columns="2">
-
 				<h:outputLabel value="Descrição: " for="descricao" />
 				<h:inputText id="descricao"
 					value="#{contaBean.selecionada.descricao}" required="true"
@@ -32,47 +28,36 @@
 				<h:outputLabel value="Saldo Inicial: " for="saldoInicial" />
 				<h:inputText id="saldoInicial"
 					value="#{contaBean.selecionada.saldoInicial}" size="10">
-					<f:convertNumber maxFractionDigits="2" />
+					<f:convertNumber minFractionDigits="2" />
 				</h:inputText>
 
-				<h:commandButton action="#{contaBean.salvar}" value="Salvar">
+				<h:commandButton value="Salvar" action="#{contaBean.salvar}">
 					<f:ajax execute="@form" render=":edicao :listagem" />
 				</h:commandButton>
 			</h:panelGrid>
-
 		</h:form>
 
 		<h:form id="listagem">
+			<!-- (2) -->
 			<h:dataTable value="#{contaBean.lista}" var="conta"
 				rendered="#{!empty contaBean.lista}">
-				<!-- aqui serão definidas as colunas da dataTable -->
-
 				<h:column>
-					<f:facet name="header">
-						Descrição
-					</f:facet>
+					<f:facet name="header">Descrição</f:facet>
 					#{conta.descricao}
 				</h:column>
-
 				<h:column>
-					<f:facet name="header">
-						Data Cadastro
-					</f:facet>
+					<f:facet name="header">Data Cadastro</f:facet>
 					<h:outputText value="#{conta.dataCadastro}">
 						<f:convertDateTime dateStyle="medium" />
 					</h:outputText>
 				</h:column>
-
 				<h:column>
-					<f:facet name="header">
-						Saldo Inicial
-					</f:facet>
+					<f:facet name="header">Saldo Inicial</f:facet>
 					<h:outputText value="#{conta.saldoInicial}"
-						style="text-align: right; display: block;">
-						<f:convertNumber maxFractionDigits="2" />
+						style="text-align: right; display:block;">
+						<f:convertNumber minFractionDigits="2" />
 					</h:outputText>
 				</h:column>
-
 				<h:column>
 					<h:commandLink action="#{contaBean.tornarFavorita}">
 						<f:ajax execute="@this" render=":listagem" />
@@ -82,7 +67,6 @@
 							value="#{conta}" />
 					</h:commandLink>
 				</h:column>
-
 				<h:column>
 					<h:commandLink>
 						<f:ajax execute="@this" render=":edicao" />
@@ -91,7 +75,6 @@
 							value="#{conta}" />
 					</h:commandLink>
 				</h:column>
-
 				<h:column>
 					<h:commandLink action="#{contaBean.excluir}">
 						<f:ajax execute="@this" render=":listagem" />
@@ -100,9 +83,10 @@
 							value="#{conta}" />
 					</h:commandLink>
 				</h:column>
-
 			</h:dataTable>
 		</h:form>
+		
+		
 		<h:panelGrid columns="4">
 			<h:form id="impressao">
 				<h:commandLink>

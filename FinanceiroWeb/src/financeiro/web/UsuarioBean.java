@@ -65,6 +65,7 @@ public class UsuarioBean {
 
 		// enviar email após o cadastramento de um usuário novo
 		if (this.destinoSalvar.equals("usuarioSucesso")) {
+			/*
 			try {
 				usuarioRn.enviarEmailPosCadastramento(this.usuario);
 			} catch (RNException e) {
@@ -74,7 +75,7 @@ public class UsuarioBean {
 				context.addMessage(null, msg);
 				e.printStackTrace();
 				return null;
-			}
+			}*/
 		}
 
 		if (this.conta.getDescricao() != null) {
