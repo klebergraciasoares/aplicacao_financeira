@@ -34,7 +34,7 @@
 			</h:panelGroup>
 
 			<h:panelGroup id="edicao">
-				<h:messages />
+				<p:messages />
 				<h:form rendered="#{categoriaBean.mostraEdicao}" prependId="false">
 					<h:inputHidden value="#{categoriaBean.editada.codigo}" />
 					<h:inputHidden value="#{categoriaBean.editada.fator}" />
@@ -45,11 +45,13 @@
 							<f:selectItems value="#{categoriaBean.categoriasSelect}" />
 						</h:selectOneMenu>
 						<h:outputLabel value="Descrição" />
-						<h:inputText value="#{categoriaBean.editada.descricao}" />
+						<p:inputText value="#{categoriaBean.editada.descricao}" />
 						<h:outputText />
 						<h:panelGroup>
 							<p:commandButton value="Salvar" action="#{categoriaBean.salvar}" update=":edicao, :arvore"/>
-							<p:commandButton value="Excluir" action="#{categoriaBean.excluir}" update=":edicao, :arvore"/>
+							<p:commandButton value="Excluir" action="#{categoriaBean.excluir}" update=":edicao, :arvore" onclick="if(!confirm('Confirma a exclusão da descrição #{categoriaBean.editada.descricao}?')) return false;"  />
+							
+							
 						</h:panelGroup>
 						<h:outputText />
 						<p:commandButton value="Nova sub-categoria" action="#{categoriaBean.novo}" update=":edicao"/>

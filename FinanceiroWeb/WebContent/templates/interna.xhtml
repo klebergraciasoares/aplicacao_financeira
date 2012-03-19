@@ -2,7 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:h="http://java.sun.com/jsf/html"
-	  xmlns:ui="http://java.sun.com/jsf/facelets">
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://java.sun.com/jsf/core">
 	<h:head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 		<title>
@@ -17,6 +19,8 @@
 		</style>
 	</h:head>
 	<h:body>
+		<f:view encoding="UTF-8" >
+		
 		<div id="container">
 			<div id="titulo">
 				<ui:insert name="titulo" >Financeiro Web</ui:insert>
@@ -34,6 +38,11 @@
 			</div>
 			
 			<div id="corpo">
+				<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>  
+              	<p:dialog modal="true" widgetVar="statusDialog" header="Status"	draggable="false" closable="false">  
+    		
+    				<h:graphicImage library="imagens" name="ajaxloadingbar.gif" />
+				</p:dialog>  
 				<ui:insert name="corpo"/>
 			</div>	
 		
@@ -43,5 +52,6 @@
 				</ui:insert>
 			</div>
 		</div>
+		</f:view>
 	</h:body>
 </html>

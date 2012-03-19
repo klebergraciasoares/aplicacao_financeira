@@ -14,26 +14,27 @@
 
 	<ui:define name="corpo">
 
+		
 		<h:form id="edicao">
 			<!-- (1) -->
-			<h:messages />
+			<p:messages />
 			<h:inputHidden value="#{contaBean.selecionada.conta}" />
 			<h:inputHidden value="#{contaBean.selecionada.favorita}" />
 			<h:panelGrid columns="2">
 				<h:outputLabel value="Descrição: " for="descricao" />
-				<h:inputText id="descricao"
+				<p:inputText id="descricao"
 					value="#{contaBean.selecionada.descricao}" required="true"
-					maxlength="45" />
+					maxlength="45" requiredMessage="o campo descrição é obrigatório." />
 
 				<h:outputLabel value="Saldo Inicial: " for="saldoInicial" />
-				<h:inputText id="saldoInicial"
+				<p:inputText id="saldoInicial"
 					value="#{contaBean.selecionada.saldoInicial}" size="10">
 					<f:convertNumber minFractionDigits="2" />
-				</h:inputText>
+				</p:inputText>
 
-				<h:commandButton value="Salvar" action="#{contaBean.salvar}">
-					<f:ajax execute="@form" render=":edicao :listagem" />
-				</h:commandButton>
+				<p:commandButton value="Salvar" action="#{contaBean.salvar}" process="@form"  update=":listagem :edicao :menu" ></p:commandButton>
+				
+				
 			</h:panelGrid>
 		</h:form>
 
@@ -59,29 +60,30 @@
 					</h:outputText>
 				</h:column>
 				<h:column>
-					<h:commandLink action="#{contaBean.tornarFavorita}">
-						<f:ajax execute="@this" render=":listagem" />
+					<p:commandLink action="#{contaBean.tornarFavorita}" process="@this" update=":listagem ">
+						
 						<h:graphicImage library="imagens"
 							name="favorita16_#{conta.favorita}.png" />
 						<f:setPropertyActionListener target="#{contaBean.selecionada}"
 							value="#{conta}" />
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 				<h:column>
-					<h:commandLink>
-						<f:ajax execute="@this" render=":edicao" />
+					<p:commandLink process="@this" update=":edicao">
 						<h:graphicImage library="imagens" name="editar16.png" />
 						<f:setPropertyActionListener target="#{contaBean.selecionada}"
 							value="#{conta}" />
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 				<h:column>
-					<h:commandLink action="#{contaBean.excluir}">
-						<f:ajax execute="@this" render=":listagem" />
+				
+					<p:commandLink action="#{contaBean.excluir}" process="@this" update=":listagem :menu" onclick="if(!confirm('Confirma a exculsão da conta #{conta.descricao}?'))return false;" >
+					
 						<h:graphicImage library="imagens" name="excluir16.png" />
 						<f:setPropertyActionListener target="#{contaBean.selecionada}"
 							value="#{conta}" />
-					</h:commandLink>
+					</p:commandLink>
+					
 				</h:column>
 			</h:dataTable>
 		</h:form>

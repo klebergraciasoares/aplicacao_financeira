@@ -51,6 +51,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
+import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
@@ -73,6 +74,7 @@ public class RelatorioUtil {
 
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
+			
 			Connection conexao = this.getConexao();
 			String caminhoRelatorio = context.getExternalContext().getRealPath("relatorios");
 			String caminhoArquivoJasper = caminhoRelatorio + File.separator + nomeRelatorioJasper + ".jasper";
@@ -92,6 +94,7 @@ public class RelatorioUtil {
 				case RelatorioUtil.RELATORIO_HTML :
 					tipoArquivoExportado = new JRHtmlExporter();
 					extensaoArquivoExportado = "html";
+					
 					break;
 				case RelatorioUtil.RELATORIO_EXCEL :
 					tipoArquivoExportado = new JRXlsExporter();
@@ -108,9 +111,16 @@ public class RelatorioUtil {
 			}
 			caminhoArquivoRelatorio = caminhoRelatorio + File.separator + nomeRelatorioSaida + "." + extensaoArquivoExportado;
 			arquivoGerado = new java.io.File(caminhoArquivoRelatorio);
+			tipoArquivoExportado.setParameter(JRHtmlExporterParameter.IMAGES_URI,context.getExternalContext().getRealPath("resources/imagens"));
+			
+			tipoArquivoExportado.setParameter(JRHtmlExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);  
+			tipoArquivoExportado.setParameter(JRHtmlExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.TRUE);  
+			
+			
 			tipoArquivoExportado.setParameter(JRExporterParameter.JASPER_PRINT, impressoraJasper);
 			tipoArquivoExportado.setParameter(JRExporterParameter.OUTPUT_FILE, arquivoGerado);
 			tipoArquivoExportado.exportReport();
+			
 			arquivoGerado.deleteOnExit();
 
 			InputStream conteudoRelatorio = new FileInputStream(arquivoGerado);

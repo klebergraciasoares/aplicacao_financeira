@@ -21,7 +21,8 @@ public class ChequeDAOHibernate implements ChequeDAO {
 	@Override
 	public void salvar(Cheque cheque) {
 		this.session.merge(cheque);
-
+		this.session.flush();
+		this.session.clear();
 	}
 
 	@Override

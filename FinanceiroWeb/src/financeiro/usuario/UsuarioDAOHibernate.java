@@ -16,6 +16,8 @@ public class UsuarioDAOHibernate implements UsuarioDAO {
 	@Override
 	public void salvar(Usuario usuario) {
 		this.session.save(usuario);
+		this.session.flush();
+		this.session.clear();
 	}
 
 	@Override
@@ -27,13 +29,16 @@ public class UsuarioDAOHibernate implements UsuarioDAO {
 			this.session.evict(usuarioPermissao);
 		}
 		this.session.update(usuario);
+		this.session.flush();
+		this.session.clear();
 
 	}
 
 	@Override
 	public void excluir(Usuario usuario) {
 		this.session.delete(usuario);
-
+		this.session.flush();
+		this.session.clear();
 	}
 
 	@Override

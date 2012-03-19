@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/templates/interna.xhtml">
 	<ui:define name="titulo">
@@ -22,16 +23,16 @@
 			</ui:repeat>
 		</h:form>
 
-		<h:messages id="mensagem" />
+		<p:messages id="mensagem" autoUpdate="true" />
 
 		<h:form id="edicao" prependId="false">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{msg.cheque_numero_inicial}"
 					for="chequeInicial" />
-				<h:inputText id="chequeInicial" value="#{chequeBean.chequeInicial}"
-					maxlength="6" size="6" />
+				<p:inputText  id="chequeInicial" value="#{chequeBean.chequeInicial}"
+					maxlength="6" size="6" required="true" requiredMessage="o campo cheque inicial é obrigatório." />
 				<h:outputLabel value="#{msg.cheque_numero_final}" for="chequeFinal" />
-				<h:inputText id="chequeFinal" value="#{chequeBean.chequeFinal}"
+				<p:inputText id="chequeFinal" value="#{chequeBean.chequeFinal}" required="true" requiredMessage="o campo cheque final é obrigatório."
 					maxlength="6" size="6" />
 				<h:commandButton value="#{msg.cheque_botao_salvar}"
 					action="#{chequeBean.salvar}">
@@ -76,22 +77,23 @@
 						
 				</h:column>
 				<h:column>
-					<h:commandLink action="#{chequeBean.cancelar}">
-						<f:ajax execute="@form" render=":listagem :mensagem" />
+					<p:commandLink action="#{chequeBean.cancelar}" process="@form" update=":listagem :mensagem" >
+						
 						<h:graphicImage library="imagens" name="cancelar16.png"
 							title="#{msg.cheque_coluna_cancelar}" />
 						<f:setPropertyActionListener target="#{chequeBean.selecionado}"
 							value="#{cheque}" />
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 				<h:column>
-					<h:commandLink action="#{chequeBean.excluir}">
-						<f:ajax execute="@form" render=":listagem :mensagem" />
+					<p:commandLink action="#{chequeBean.excluir}" process="@form" update=":listagem :mensagem" 
+					onclick="if(!confirm('Confirma a exclusão do cheque #{cheque.chequeId.cheque}?')) return false;">
+						
 						<h:graphicImage library="imagens" name="excluir16.png"
 							title="#{msg.cheque_coluna_excluir}" />
 						<f:setPropertyActionListener target="#{chequeBean.selecionado}"
 							value="#{cheque}" />
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 			</h:dataTable>
 		</h:form>

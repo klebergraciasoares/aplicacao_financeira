@@ -9,21 +9,21 @@
 <ui:composition>
 	<h:panelGrid style="margin:0px auto;">
 		<h:form id="edicao" >
-			<h:messages />
+			<p:messages />
 			<h:inputHidden value="#{acaoBean.selecionada.acao.codigo}" />
 			<h:panelGrid columns="10">
 				<h:outputLabel value="Sigla" for="sigla" />
-				<h:inputText id="sigla" value="#{acaoBean.selecionada.acao.sigla}"
-					required="true" maxlength="10" size="10" />
+				<p:inputText id="sigla" value="#{acaoBean.selecionada.acao.sigla}"
+					required="true" maxlength="10" size="10" requiredMessage="o campo sigla é obrigatório." />
 				<h:outputLabel value="Descrição" for="descricao" />
-				<h:inputText id="descricao"
+				<p:inputText id="descricao"
 					value="#{acaoBean.selecionada.acao.descricao}" maxlength="30"
 					size="10" />
 				<h:outputLabel value="Qt. de Quotas" for="quantidade" />
-				<h:inputText id="quantidade"
+				<p:inputText id="quantidade"
 					value="#{acaoBean.selecionada.acao.quantidade}" required="true"
-					size="6">
-				</h:inputText>
+					size="6" requiredMessage="o campo quantidade é obrigatório." />
+				
 				<h:outputLabel value="Origem" for="origem" />
 				<h:selectOneMenu id="origem"
 					value="#{acaoBean.selecionada.acao.origem}">

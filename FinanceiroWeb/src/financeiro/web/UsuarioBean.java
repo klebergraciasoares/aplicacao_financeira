@@ -8,6 +8,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import org.springframework.util.DigestUtils;
+
 import financeiro.conta.Conta;
 import financeiro.conta.ContaRN;
 import financeiro.usuario.Usuario;
@@ -23,6 +25,7 @@ public class UsuarioBean {
 	private List<Usuario> lista;
 	private String destinoSalvar;
 	private Conta conta = new Conta();
+	private String senhaCriptografada;
 
 	public String novo() {
 		this.destinoSalvar = "usuarioSucesso";
@@ -33,6 +36,7 @@ public class UsuarioBean {
 
 	public String editar() {
 		this.confirmarSenha = this.usuario.getSenha();
+		this.senhaCriptografada = this.usuario.getSenha();
 		return "/publico/usuario";
 
 	}
@@ -53,11 +57,19 @@ public class UsuarioBean {
 
 		String senha = this.usuario.getSenha();
 
-		if (!senha.equals(this.confirmarSenha)) {
-			FacesMessage faceMessage = new FacesMessage(
-					"A senha não foi confirmada corretamente.");
-			context.addMessage(null, faceMessage);
+		if(senha != null && senha.trim().length()>0 && !senha.equals(this.confirmarSenha)){
+			FacesMessage facesMessage = new FacesMessage("A senha não foi confirmada corretamente");
+			context.addMessage(null, facesMessage);
 			return null;
+		}
+		
+		//recuperando a senha criptografada caso a senha não tenha sido preenchida em tela
+		//e criptografando caso a senha tenha sido preenchida em tela
+		if(senha !=null && senha.trim().length()==0){
+			this.usuario.setSenha(this.senhaCriptografada);
+		}else{
+			String senhaCripto = DigestUtils.md5DigestAsHex(senha.getBytes());
+			this.usuario.setSenha(senhaCripto);
 		}
 
 		UsuarioRN usuarioRn = new UsuarioRN();
@@ -148,5 +160,14 @@ public class UsuarioBean {
 	public void setConta(Conta conta) {
 		this.conta = conta;
 	}
+
+	public String getSenhaCriptografada() {
+		return senhaCriptografada;
+	}
+
+	public void setSenhaCriptografada(String senhaCriptografada) {
+		this.senhaCriptografada = senhaCriptografada;
+	}
+	
 
 }

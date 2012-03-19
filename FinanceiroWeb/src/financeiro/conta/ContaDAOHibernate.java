@@ -22,12 +22,15 @@ public class ContaDAOHibernate implements ContaDAO {
 	public void salvar(Conta conta) {
 
 		this.session.saveOrUpdate(conta);
+		this.session.flush();
+		this.session.clear();
 	}
 
 	@Override
 	public void excluir(Conta conta) {
 		this.session.delete(conta);
-
+		this.session.flush();
+		this.session.clear();
 	}
 
 	@Override

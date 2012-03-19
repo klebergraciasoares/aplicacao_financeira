@@ -21,13 +21,15 @@ public class AcaoDAOHibernate implements AcaoDAO {
 	@Override
 	public void salvar(Acao acao) {
 		this.session.saveOrUpdate(acao);
-
+		this.session.flush();
+		this.session.clear();
 	}
 
 	@Override
 	public void excluir(Acao acao) {
 		this.session.delete(acao);
-
+		this.session.flush();
+		this.session.clear();
 	}
 
 	@Override

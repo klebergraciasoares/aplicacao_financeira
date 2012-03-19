@@ -16,12 +16,12 @@
 						<f:facet name="header">
 								Sigla
 							</f:facet>
-						<h:commandLink title="gráfico da ação">
-							<f:ajax execute="@this" render=":graficosAcao" />
+						<p:commandLink title="gráfico da ação" process="@this" update=":graficosAcao" >
+							
 							<h:outputText value="#{acaoVirtual.acao.sigla}" />
 							<f:setPropertyActionListener target="#{acaoBean.selecionada}"
 								value="#{acaoVirtual}" />
-						</h:commandLink>
+						</p:commandLink>
 					</h:column>
 
 					<h:column>
@@ -77,19 +77,20 @@
 					</h:column>
 					
 					<h:column>
-						<h:commandLink title="editar" >
-							<f:ajax execute="@this" render=":edicao :listagem :graficoCarteira" />
+						<p:commandLink title="editar" process="@this" update=":edicao :listagem :graficoCarteira" >
+							
 							<h:graphicImage library="imagens" name="editar16.png" />
 							<f:setPropertyActionListener target="#{acaoBean.selecionada}" value="#{acaoVirtual}" />
-						</h:commandLink>
+						</p:commandLink>
 					</h:column>
 					
 					<h:column>
-						<h:commandLink title="excluir" action="#{acaoBean.excluir}" >
-							<f:ajax execute="@this" render=":listagem :listagem :graficoCarteira" />
+						<p:commandLink title="excluir" action="#{acaoBean.excluir}" process="@this" update=":listagem :listagem :graficoCarteira" 
+						onclick="if(!confirm('Confirma a exclusão da sigla #{acaoVirtual.acao.sigla}')) return false;">
+							
 							<h:graphicImage library="imagens" name="excluir16.png" />
 							<f:setPropertyActionListener target="#{acaoBean.selecionada}" value="#{acaoVirtual}" />
-						</h:commandLink>
+						</p:commandLink>
 					</h:column>
 					
 				</h:dataTable>

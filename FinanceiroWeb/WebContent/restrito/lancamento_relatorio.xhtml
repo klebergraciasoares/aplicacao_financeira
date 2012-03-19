@@ -16,9 +16,9 @@
 					<h:panelGrid columns="7" >
 					
 						<h:outputLabel value="Data inicial: " />
-						<p:calendar value="#{lancamentoBean.dataInicialRelatorio}" pattern="dd/MM/yyyy" />
+						<p:calendar value="#{lancamentoBean.dataInicialRelatorio}" locale="pt_BR" pattern="dd/MM/yyyy" required="true" requiredMessage="o campo data inicial é obrigatório." />
 						<h:outputLabel value="Data final: " />
-						<p:calendar value="#{lancamentoBean.dataFinalRelatorio}" pattern="dd/MM/yyyy" />
+						<p:calendar value="#{lancamentoBean.dataFinalRelatorio}" locale="pt_BR" pattern="dd/MM/yyyy" required="true" requiredMessage="o campo data final é obrigatório." />
 						<p:commandButton value="Imprimir" ajax="false" >
 							<p:fileDownload value="#{lancamentoBean.arquivoRetorno}"/>
 						</p:commandButton>

@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <ui:composition template="/templates/interna.xhtml">
 	<ui:define name="titulo">
@@ -11,8 +13,8 @@
 	  		</ui:define>
 	<ui:define name="corpo">
 
-		<h:form>
-			<h:messages />
+		<h:form id="principal" prependId="false" >
+			<p:messages />
 			<h:dataTable value="#{usuarioBean.lista}" var="usuario" rules="rows"
 				cellpadding="5">
 				<f:facet name="caption">
@@ -27,14 +29,14 @@
 					Final da listagem
 				</f:facet>
 
-				<h:column>
-					<h:commandLink action="#{usuarioBean.ativar}">
+				<h:column >
+					<p:commandLink action="#{usuarioBean.ativar}" process="@this" update="@form" >
 						<h:graphicImage library="imagens"
-							name="usuario_ativo_#{usuario.ativo}.png" title="Usuario ativo"
+							name="usuario_ativo_#{usuario.ativo}.png" 
 							style="border:0px;" />
 						<f:setPropertyActionListener target="#{usuarioBean.usuario}"
 							value="#{usuario}" />
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 
 				<h:column>
@@ -59,41 +61,42 @@
 
 				<h:column>
 					<f:facet name="header">Permissões</f:facet>
-					<h:commandLink value=""
+					<p:commandLink process="@form" update=":principal"  
 						action="#{usuarioBean.atribuiPermissao(usuario,'ROLE_ADMINISTRADOR')}"
 						title="Permissão Administrador">
 						<h:graphicImage library="imagens"
 							name="ROLE_ADMINISTRADOR_#{usuario.permissao.contains('ROLE_ADMINISTRADOR')}.png"
 							style="border:0px;" />
-					</h:commandLink>
+					</p:commandLink>
 
-					<h:commandLink value=""
+					<p:commandLink process="@form" update=":principal"
 						action="#{usuarioBean.atribuiPermissao(usuario,'ROLE_USUARIO_VIP')}"
 						title="Permissão Usuário Vip">
+						
 						<h:graphicImage library="imagens"
 							name="ROLE_USUARIO_VIP_#{usuario.permissao.contains('ROLE_USUARIO_VIP')}.png"
 							style="border:0px;" />
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 
 				<h:column>
-					<h:commandLink action="#{usuarioBean.editar}">
+					<p:commandLink action="#{usuarioBean.editar}">
 						<h:graphicImage library="imagens" name="editar16.png"
 							style="border:0px;" />
 						<f:setPropertyActionListener target="#{usuarioBean.usuario}"
 							value="#{usuario}" />
 						<f:setPropertyActionListener target="#{usuarioBean.destinoSalvar}"
 							value="/admin/principal" />
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 				<h:column>
-					<h:commandLink action="#{usuarioBean.excluir}"
+					<p:commandLink action="#{usuarioBean.excluir}" update=":principal" process="@this"
 						onclick="if(!confirm('Confirma a exclusão do usuário #{usuario.nome}?')) return false;">
 						<h:graphicImage library="imagens" name="excluir16.png"
 							style="border:0px;" />
 						<f:setPropertyActionListener target="#{usuarioBean.usuario}"
 							value="#{usuario}"></f:setPropertyActionListener>
-					</h:commandLink>
+					</p:commandLink>
 				</h:column>
 			</h:dataTable>
 

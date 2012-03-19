@@ -40,9 +40,12 @@ where
 and
 	lancamento.categoria = categoria.codigo
 and
+	lancamento.conta = $P{numeroConta}
+and
 	usuario.codigo = $P{codigoUsuario}
 and
-	conta_bancaria.cod_conta = $P{numeroConta}
+	conta_bancaria.cod_usuario = $P{codigoUsuario}
+
 and
 	lancamento.data >= $P{dataInicial}
 and
